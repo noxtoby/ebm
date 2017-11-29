@@ -22,7 +22,7 @@ def setup_package():
     metadata = dict(name='ebm',
                     maintainer='Nicholas C. Firth',
                     maintainer_email='nicholas.firth@ucl.ac.uk',
-                    description='EBM code innit',
+                    description='Event Based Model of progression',
                     license='TBC',
                     url='',
                     version='0.0.1',
