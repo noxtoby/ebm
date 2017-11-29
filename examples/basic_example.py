@@ -1,4 +1,4 @@
-# Authors: Nicholas C. Firth <ncfirth87@gmail.com>
+# Authors: Nicholas C. Firth <ncfirth87@gmail.com>, Neil P. Oxtoby <noxtoby@gmail.com>
 # License: TBC
 from ebm import mixture_model
 from ebm import mcmc

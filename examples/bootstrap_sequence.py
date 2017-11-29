@@ -1,4 +1,4 @@
-# Authors: Nicholas C. Firth <ncfirth87@gmail.com>
+# Authors: Nicholas C. Firth <ncfirth87@gmail.com>, Neil P. Oxtoby <noxtoby@gmail.com>
 # License: TBC
 from ebm import mixture_model
 from ebm import mcmc
@@ -9,29 +9,36 @@ from matplotlib import pyplot as plt
 
 
 def main():
+    # An example of how to produce a more conservative estimate of uncertainty 
+    # in the EBM sequence, by fitting multiple EBMs to bootstrap samples from 
+    # the data
+    
+    # Load the data
     X, y, bmname, cname = datasets.load_synthetic('synthetic_1500_10.csv')
-    mixture_models = []
-    for i in range(X.shape[1]):
-        h_model = distributions.Gaussian()
-        d_model = distributions.Gaussian()
-        gmm = mixture_model.MixtureModel(cn_comp=h_model,
-                                         ad_comp=d_model)
-        gmm.fit(X[:, i], y)
-        mixture_models.append(gmm)
+    
+    # Fit the mixture models
+    mixture_models = mixture_model.fit_all_gmm_models(X, y)
     fig, ax = plotting.mixture_model_grid(X, y, mixture_models,
                                           score_names=bmname,
                                           class_names=cname)
     fig.show()
-
+    
+    # Fit our disease sequence, using greedy ascent followed by MCMC optimisation
     samples = mcmc.mcmc(X, mixture_models, n_iter=200,
                         greedy_n_iter=10, greedy_n_init=2)
-    ml_order = samples[0]
+    ml_order = samples[0] # MLE of sequence
+    
+    # Plot a positional variance diagram to visualise uncertainty in the sequence
+    # The uncertainty here is over-confident: it's uncertainty in the mean
     fig, ax = plotting.mcmc_uncert_mat(samples, score_names=bmname)
     fig.show()
-
+    
+    # Bootstrapping
     bs_samples = mcmc.bootstrap_ebm(X, y, n_mcmc_iter=200,
                                     n_bootstrap=10, greedy_n_init=2,
                                     greedy_n_iter=10)
+    # Plot a positional variance diagram to visualise uncertainty in the bootstrap sequence
+    # The uncertainty here is more conservative: it's uncertainty in the mean, combined across bootstrapped samples
     fig, ax = plotting.mcmc_uncert_mat(bs_samples, ml_order=ml_order,
                                        score_names=bmname)
     fig.show()
