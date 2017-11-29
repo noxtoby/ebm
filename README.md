@@ -20,7 +20,7 @@ The code depends heavily on NumPy, uses SciPy to calculate some stats and do som
 Important Links
 ===============
 
-- [Issue tracker](../issues)
+- [Issue tracker](../../issues)
 
 EBM Papers
 ----------
